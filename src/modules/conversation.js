@@ -5,4 +5,4 @@ const conversationmodel=new mongoose.Schema({
     message:{ type:mongoose.Schema.Types.ObjectId ,ref: 'Message' }
 })
 
-module.exports=conversationmodel.module( 'Converstaion' , conversationmodel )
+module.exports = mongoose.model( 'Converstaion' , conversationmodel )

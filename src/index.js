@@ -2,7 +2,7 @@
 const express = require('express');
 require('dotenv').config()
 const routes =require('./routes/routes')
-const msgroyes=require('./routes/chatroute')
+const message =require('./routes/chatroute')
 const mongoose =require('mongoose')
 const cors = require('cors');
 const { Socket } = require('socket.io');
@@ -20,7 +20,7 @@ mongoose.connect(process.env.MongoDburl)
 const port = process.env.Port || 3030;
 
 app.use('/',routes )
-app.use('/mesage',msgroyes)
+app.use('/',message)
 
 app.listen(port, () => {
   console.log(`server is running on ${port}`);

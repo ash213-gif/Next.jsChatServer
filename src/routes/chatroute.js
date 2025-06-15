@@ -1,8 +1,7 @@
 const express=require('express')
 const router=express.Router()
-const {getMessages,sendMessage} =require('../Controller/chatcontroller')
+const {sendmessage} =require('../Controller/messageControl')
 
-router.post('/sendmessage', sendMessage);
-router.get('/getmessages', getMessages);
+router.post('/sendmessage/:id', sendmessage);
 
 module.exports = router;
