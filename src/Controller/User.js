@@ -8,7 +8,7 @@ exports.user = async (req, res) => {
     try {
         const { name, email, password } = req.body;
         const profileimg = req.file;
-
+       
         if (!profileimg) {
             return res.status(400).send({ status: false, msg: 'profile image is required' });
         }
@@ -38,7 +38,7 @@ exports.user = async (req, res) => {
         };
 
         const saveUser = await Schema.create(tempdata);
-        return res.send({ data: saveUser, status: true, msg: 'User registered successfully' });
+        return res.status(201).send({ data: saveUser, status: true, msg: 'User registered successfully' });
 
     } catch (e) {
         return res.status(500).send({ status: false, msg: e.message });

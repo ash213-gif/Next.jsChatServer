@@ -17,10 +17,10 @@ mongoose.connect(process.env.MongoDburl)
   .then(() => { console.log('mongoDB is connected'); }) 
   .catch((e) => {  console.error('mongoose not connected'); });
   
-const port = process.env.Port || 3030;
+const port = process.env.Port || 4040;
 
 app.use('/',routes )
-app.use('/',message)
+app.use('/message',message)
 
 app.listen(port, () => {
   console.log(`server is running on ${port}`);

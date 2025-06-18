@@ -12,7 +12,7 @@ exports.UploadCloudary = async (profileimg) => {
         // Accept either a file object or a string path
         const filePath = profileimg.path 
         const upload = await cloudinary.uploader.upload(filePath);
-        console.log(upload);
+        
         return upload;
     } catch (e) {
         console.log(`cloudinary upload error ${e}`);

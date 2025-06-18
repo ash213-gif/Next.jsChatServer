@@ -1,27 +1,42 @@
-const { conversationmodel } = require('../modules/conversation')
-const { messageSchema } = require('../modules/Message')
+const  conversationmodel  = require('../modules/conversation');
+const  messageSchema  = require('../modules/Message');
 
 exports.sendmessage = async (req, res) => {
-     try {
+    try {
+        const { SenderId, RecevierId, message } = req.body;
+        if (!SenderId || !RecevierId || !message) {
+            return res.status(400).send({ status: false, msg: 'All fields are required' });
+        }
 
-          const { SenderId,RecevierId,message } =req.body;
+        const newMessage = new messageSchema({
+            userId: SenderId,
+            message
+        });
 
-          if(!SenderId || !RecevierId || !message ) { return res.status(400).send({status:false, msg:`aal is  requires  `}) }
+        const savemessage = await newMessage.save();
 
-          let gotConversation = await conversationmodel.findOne({ participants: { $all: [SenderId, RecevierId] } })
-          if (!gotConversation) { gotConversation = await conversationmodel.create({ participants: { $all: [SenderId, RecevierId] } }) }
+        let conversation = await conversationmodel.findOne({
+            participants: { $all: [SenderId, RecevierId] }
 
-          const newMessage = messageSchema.create({
-               SenderId,
-               RecevierId,
-               message
-          })
+        });
 
-          if (newMessage) { gotConversation.message.push(newMessage._id) }
-          await gotConversation.save()
+        if (conversation) {
+            conversation = await conversationmodel.findByIdAndUpdate(
+                conversation._id,
+                { $push: { message: [savemessage._id] } },
+                { new: true }
+            );
+        } else {
+            // Create new conversation if not exists
+            conversation = await conversationmodel.create({
+                participants: [SenderId, RecevierId],
+                message: [savemessage._id]
+            });
+        }
 
-          if (newMessage) { return res.status(400).send({ status: false, msg: 'message are required' }) }
+        return res.status(200).send({ status: true, msg: 'Message sent', data: savemessage });
 
-     } catch (e) { return res.status(500).send({ msg: e.message }); }
-
+    } catch (e) {
+        return res.status(500).send({ msg: e.message });
+    }
 }
